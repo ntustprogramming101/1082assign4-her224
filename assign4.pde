@@ -523,10 +523,8 @@ void drawGH(){
         if(playerMoveTimer == 0){
           playerRow++;
           playerY = SOIL_SIZE * playerRow;
-	  downState = false;
         }else{
           playerY = (1f - float(playerMoveTimer) / playerMoveDuration + playerRow) * SOIL_SIZE;
-	  downState = true;
         }
         break;
       }
@@ -544,6 +542,8 @@ void keyPressed(){
 			rightState = true;
 			break;
 			case DOWN:
+			if(downPressed == false){ 
+          		downPressed = true;
 			downState = true;
 			break;
 		}
