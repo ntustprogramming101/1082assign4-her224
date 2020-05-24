@@ -389,7 +389,10 @@ void draw() {
 		popMatrix();
 
 		// Health UI
-    drawLife();
+    // Draw different number and position of life.
+  for(int i = 0; i < playerHealth; ++i){
+    image(life, i * (life.width+20)+10, 10);
+  }
     
     // Switch to game over if health equal zero.
     if(playerHealth == 0){
@@ -513,13 +516,6 @@ void initialSoldier(){
   for(int i = 0; i < 6; i++){
     soldierX[i] = random(0, width);
     soldierY[i] = floor(random(i * 4, (i + 1) * 4)) * SOIL_SIZE;
-  }
-}
-
-void drawLife(){
-  // Draw different number and position of life.
-  for(int i = 0; i < playerHealth; ++i){
-    image(life, i * (life.width+20)+10, 10);
   }
 }
 
