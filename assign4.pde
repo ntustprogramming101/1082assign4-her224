@@ -543,8 +543,9 @@ void keyPressed(){
 			break;
 			case DOWN:
 			if(downPressed == false){ 
-          		downPressed = true;
-			downState = true;
+          			downPressed = true;
+				downState = true;
+				}
 			break;
 		}
 	}else{
