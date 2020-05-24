@@ -523,8 +523,10 @@ void drawGH(){
         if(playerMoveTimer == 0){
           playerRow++;
           playerY = SOIL_SIZE * playerRow;
+	  downState = false;
         }else{
           playerY = (1f - float(playerMoveTimer) / playerMoveDuration + playerRow) * SOIL_SIZE;
+	  downState = true;
         }
         break;
       }
