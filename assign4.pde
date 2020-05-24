@@ -134,7 +134,102 @@ void draw() {
 		// Soldiers
     drawSoldier();
     // Groundhog
-    drawGH();
+    
+    groundhogDisplay = groundhogIdle;
+    // If player is not moving, we have to decide what player has to do next
+    if(playerMoveTimer == 0){
+      // If the soil under player is empty, player should fall automatically and can't move left or right.
+      if((playerRow < SOIL_ROW_COUNT - 1) && (soilHealth[playerCol][playerRow + 1] == 0)){
+        playerMoveDirection = DOWN;
+        playerMoveTimer = playerMoveDuration;
+        leftState = false;
+        rightState = false;        
+      }else{
+
+        if(leftState){
+  
+          groundhogDisplay = groundhogLeft;
+  
+          // Check left boundary
+          if(playerCol > 0){
+            // Player is under ground and left side soil isn't empty.
+            if((playerRow >= 0) && (soilHealth[playerCol - 1][playerRow] > 0)){
+              soilHealth[playerCol - 1][playerRow]--;
+            }else{
+              playerMoveDirection = LEFT;
+              playerMoveTimer = playerMoveDuration;
+            }
+          }
+  
+        }else if(rightState){
+  
+          groundhogDisplay = groundhogRight;
+  
+          // Check right boundary
+          if(playerCol < SOIL_COL_COUNT - 1){
+            // Player is under ground and right side soil isn't empty.
+            if((playerRow >= 0) && (soilHealth[playerCol + 1][playerRow] > 0)){
+              soilHealth[playerCol + 1][playerRow]--;
+            }else{
+              playerMoveDirection = RIGHT;
+              playerMoveTimer = playerMoveDuration;
+            }
+          }
+  
+        }else if(downState){
+  
+          groundhogDisplay = groundhogDown;
+  
+          // Check bottom boundary
+          if(playerRow < SOIL_ROW_COUNT - 1){
+            // Player can dig even if it's on the ground and down side soil isn't empty.
+            if((playerRow >= -1) && (soilHealth[playerCol][playerRow + 1] > 0)){
+              soilHealth[playerCol][playerRow + 1]--;
+            }else{
+              playerMoveDirection = DOWN;
+              playerMoveTimer = playerMoveDuration;
+            }
+          }
+        }
+      }
+    }
+    // Make groundhog move smoothly
+    if(playerMoveTimer > 0){
+      playerMoveTimer --;
+      switch(playerMoveDirection){
+
+        case LEFT:
+        groundhogDisplay = groundhogLeft;
+        if(playerMoveTimer == 0){
+          playerCol--;
+          playerX = SOIL_SIZE * playerCol;
+        }else{
+          playerX = (float(playerMoveTimer) / playerMoveDuration + playerCol - 1) * SOIL_SIZE;
+        }
+        break;
+
+        case RIGHT:
+        groundhogDisplay = groundhogRight;
+        if(playerMoveTimer == 0){
+          playerCol++;
+          playerX = SOIL_SIZE * playerCol;
+        }else{
+          playerX = (1f - float(playerMoveTimer) / playerMoveDuration + playerCol) * SOIL_SIZE;
+        }
+        break;
+
+        case DOWN:
+        groundhogDisplay = groundhogDown;
+        if(playerMoveTimer == 0){
+          playerRow++;
+          playerY = SOIL_SIZE * playerRow;
+        }else{
+          playerY = (1f - float(playerMoveTimer) / playerMoveDuration + playerRow) * SOIL_SIZE;
+        }
+        break;
+      }
+    }
+    image(groundhogDisplay, playerX, playerY);
 
 		// Demo mode: Show the value of soilHealth on each soil
 		// (DO NOT CHANGE THE CODE HERE!)
@@ -542,10 +637,7 @@ void keyPressed(){
 			rightState = true;
 			break;
 			case DOWN:
-			if(downPressed == false){ 
-          			downPressed = true;
-				downState = true;
-				}
+			downState = true;
 			break;
 		}
 	}else{
